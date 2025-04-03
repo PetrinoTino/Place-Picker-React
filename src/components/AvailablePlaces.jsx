@@ -4,7 +4,7 @@ import Places from './Places.jsx';
 export default function AvailablePlaces({ onSelectPlace }) {
   const [isFetching, setIsFetching]=useState(false);
   const [availablePlaces, setAvailablePlaces] = useState([]);
-
+const[error,setError]=useState();
   useEffect(() => {
 
    
@@ -12,11 +12,22 @@ export default function AvailablePlaces({ onSelectPlace }) {
 async function fetchPlaces(){
  setIsFetching(true);
 
+ try{
 const response = await  fetch('http://localhost:3000/places')
 const resData = await response.json();
+
+if(!response.ok){
+
+  throw new Error('Filed to fetch places');
+}
+
 setAvailablePlaces(resData.places);
 
+//ok 200,300 ,not ok 400,500
+ }catch(error){
+setError(error)
 
+ }
 setIsFetching(false);
     }
 
