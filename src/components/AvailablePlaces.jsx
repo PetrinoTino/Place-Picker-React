@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import Places from './Places.jsx';
 import Error from './Error.jsx';
+import { sortPlacesByDistance } from '../loc.js';
+
 
 export default function AvailablePlaces({ onSelectPlace }) {
   const [isFetching, setIsFetching]=useState(false);
@@ -22,7 +24,20 @@ if(!response.ok){
   throw new Error('Filed to fetch places');
 }
 
-setAvailablePlaces(resData.places);
+
+navigator.geolocation.getCurrentPosition((position) => {
+  
+  const sortedPlaces=sortPlacesByDistance(
+    resData.places,
+    position.coords.latitude,
+    position.coords.longitude);
+
+  setAvailablePlaces(sortedPlaces);
+
+  setIsFetching(false);
+
+});
+
 
 //ok 200,300 ,not ok 400,500
  }catch(error){
