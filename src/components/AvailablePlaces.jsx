@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Places from './Places.jsx';
+import Error from './Error.jsx';
 
 export default function AvailablePlaces({ onSelectPlace }) {
   const [isFetching, setIsFetching]=useState(false);
@@ -25,7 +26,7 @@ setAvailablePlaces(resData.places);
 
 //ok 200,300 ,not ok 400,500
  }catch(error){
-setError(error)
+setError({message: error.message || 'Could not fetch places,please try again latter!'})
 
  }
 setIsFetching(false);
@@ -41,6 +42,9 @@ fetchPlaces();
     //   });
   }, []);
 
+  if(error){
+    return <Error title="An error occurred!" message={error.message} />
+  }
   return (
     <Places
       title="Available Places"
