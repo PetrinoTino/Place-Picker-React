@@ -8,49 +8,47 @@ export default function AvailablePlaces({ onSelectPlace }) {
   const [isFetching, setIsFetching] = useState(false);
   const [availablePlaces, setAvailablePlaces] = useState([]);
   const [error, setError] = useState();
+
+  // Convert getCurrentPosition to use async/await with a Promise
+  async function getCurrentPosition() {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+  }
+
   useEffect(() => {
-    // menyra e 2 per te perdorur async/await ne nje use effect duke krijuar variabla const gjithmone
     async function fetchPlaces() {
       setIsFetching(true);
 
       try {
         const places = await fetchAvaiablePlaces();
+        const position = await getCurrentPosition();
 
-        navigator.geolocation.getCurrentPosition((position) => {
-          const sortedPlaces = sortPlacesByDistance(
-            places,
-            position.coords.latitude,
-            position.coords.longitude
-          );
+        const sortedPlaces = sortPlacesByDistance(
+          places,
+          position.coords.latitude,
+          position.coords.longitude
+        );
 
-          setAvailablePlaces(sortedPlaces);
-
-          setIsFetching(false);
-        });
-
-        //ok 200,300 ,not ok 400,500
+        setAvailablePlaces(sortedPlaces);
+        setIsFetching(false);
       } catch (error) {
         setError({
-          message:
-            error.message || "Could not fetch places,please try again latter!",
+          message: error.message || "Could not fetch places, please try again later!",
         });
+      } finally {
+        setIsFetching(false);  // Ensures state reset regardless of success or failure
       }
-      setIsFetching(false);
     }
 
     fetchPlaces();
-
-    // Menyra e pare per te perdorur fetch
-    // fetch('http://localhost:3000/places')
-    //   .then((response) => response.json())
-    //   .then((resData) => {
-    //     setAvailablePlaces(resData.places);
-    //   });
   }, []);
 
   if (error) {
+    console.error(error);  // Logs error for debugging
     return <Error title="An error occurred!" message={error.message} />;
   }
+
   return (
     <Places
       title="Available Places"
