@@ -1,13 +1,12 @@
 export async function fetchAvaiablePlaces() {
-    const response = await  fetch('http://localhost:3000/places')
-const resData = await response.json();
+  const response = await fetch("http://localhost:3000/places");
+  const resData = await response.json();
 
-if(!response.ok){
+  if (!response.ok) {
+    throw new Error("Filed to fetch places");
+  }
 
-  throw new Error('Filed to fetch places');
-}
-
-return resData.places;
+  return resData.places;
 }
 export default fetchAvaiablePlaces;
 
@@ -24,7 +23,7 @@ export default fetchAvaiablePlaces;
 // const resData = await response.json();
 // if (!response.ok){
 //   throw new Error('Failed to update user data.')
-   
+
 // }
 // return  resData.message
 // }
