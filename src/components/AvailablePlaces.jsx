@@ -34,10 +34,11 @@ export default function AvailablePlaces({ onSelectPlace }) {
         setIsFetching(false);
       } catch (error) {
         setError({
-          message: error.message || "Could not fetch places, please try again later!",
+          message:
+            error.message || "Could not fetch places, please try again later!",
         });
       } finally {
-        setIsFetching(false);  // Ensures state reset regardless of success or failure
+        setIsFetching(false); // Ensures state reset regardless of success or failure
       }
     }
 
@@ -45,7 +46,7 @@ export default function AvailablePlaces({ onSelectPlace }) {
   }, []);
 
   if (error) {
-    console.error(error);  // Logs error for debugging
+    console.error(error); // Logs error for debugging
     return <Error title="An error occurred!" message={error.message} />;
   }
 
